@@ -1,11 +1,17 @@
 import { MapPin, Navigation, Star } from 'lucide-react'
 
 function SpotCard({ spot }) {
+  const fallbackImg = (() => {
+    const q = encodeURIComponent(spot?.location || spot?.name || 'travel')
+    return `https://source.unsplash.com/800x600/?${q}`
+  })()
+  const cover = spot?.images?.[0] || fallbackImg
+
   return (
     <div className="group rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition overflow-hidden">
       <div className="aspect-video w-full overflow-hidden">
-        {spot.images?.[0] ? (
-          <img src={spot.images[0]} alt={spot.name} className="w-full h-full object-cover group-hover:scale-[1.02] transition" />
+        {cover ? (
+          <img src={cover} alt={spot.name} className="w-full h-full object-cover group-hover:scale-[1.02] transition" />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center text-white/50">
             No image
@@ -21,7 +27,7 @@ function SpotCard({ spot }) {
               <span>{spot.location}</span>
             </div>
           </div>
-          {spot.rating && (
+          {typeof spot.rating === 'number' && (
             <div className="flex items-center gap-1 text-amber-300">
               <Star className="w-4 h-4 fill-amber-300" />
               <span className="text-sm">{spot.rating.toFixed(1)}</span>
